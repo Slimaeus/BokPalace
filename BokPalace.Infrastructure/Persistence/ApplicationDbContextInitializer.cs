@@ -46,6 +46,16 @@ public class ApplicationDbContextInitializer
             {
                 Name = "Ball",
                 Description = "A ball"
+            },
+            new Item
+            {
+                Name = "Bowl",
+                Description = "A bowl"
+            },
+            new Item
+            {
+                Name = "Apple",
+                Description = "An apple"
             }
         };
 
@@ -77,6 +87,6 @@ public class ApplicationDbContextInitializer
         _applicationDbContext.Rooms
             .AddRange(rooms);
 
-        await _applicationDbContext.SaveChangesAsync();
+        //await _applicationDbContext.SaveChangesAsync();
     }
 }

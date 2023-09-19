@@ -1,0 +1,44 @@
+﻿@page "/rooms"
+
+@using BokPalace.Application.Rooms.Dtos;
+@using BokPalace.Application.Rooms.Queries;
+@using MediatR;
+@inject ISender sender
+
+<h3>Rooms</h3>
+@if (_rooms is null)
+{
+    <p>Unable to get rooms. Please try again later.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var room in _rooms)
+            {
+                <tr>
+                    <td>@room.Name</td>
+                    <td>@room.Description</td>
+                    <td>@string.Join(", ", room.Items.Select(x => x.Name))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private IEnumerable<RoomDto> _rooms = Array.Empty<RoomDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var rooms = await sender.Send(new GetRooms.Query());
+
+        _rooms = rooms.AsEnumerable();
+    }
+}
