@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BokPalace.Application.Rooms.Commands;
 using BokPalace.Application.Rooms.Dtos;
 using BokPalace.Domain.Items;
 using BokPalace.Domain.Rooms;
@@ -11,6 +12,7 @@ public class RoomProfile : Profile
     {
         CreateMap<Room, RoomDto>()
             .ForMember(x => x.Id, z => z.MapFrom(y => y.Id.Value));
+        CreateMap<CreateRoom.Command, Room>();
         CreateMap<Item, ItemDto>();
     }
 }
