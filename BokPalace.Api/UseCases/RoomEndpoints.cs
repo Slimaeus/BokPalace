@@ -18,8 +18,9 @@ public class RoomEndpoints : ICarterModule
 
         group.MapGet("", Get);
         group.MapGet("{id:guid}", GetById);
-        group.MapPost("", Post).WithName(nameof(Post));
-        group.MapPut("{id:guid}", Put).WithName(nameof(Put));
+        group.MapPost("", Post);
+        group.MapPut("{id:guid}", Put);
+        group.MapDelete("{id:guid}", Delete);
     }
     private static async Task<Ok<IReadOnlyCollection<RoomDto>>> Get(ISender sender)
         => TypedResults.Ok(await sender.Send(new GetRooms.Query()));
@@ -41,5 +42,10 @@ public class RoomEndpoints : ICarterModule
 
         return TypedResults.NoContent();
     }
-
+    private static async Task<Ok<RoomDto>> Delete(ISender sender, Guid id)
+    {
+        var roomDto = await sender.Send(new GetRoomById.Query(new RoomId(id)));
+        await sender.Send(new DeleteRoom.Command(new RoomId(id)));
+        return TypedResults.Ok(roomDto);
+    }
 }
