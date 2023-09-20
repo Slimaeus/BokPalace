@@ -17,9 +17,9 @@ public class RoomEndpoints : ICarterModule
             .WithTags("Rooms");
 
         group.MapGet("", Get);
-        group.MapGet("{id:guid}", GetById)
-            .WithName(nameof(GetById));
-        group.MapPost("", Post);
+        group.MapGet("{id:guid}", GetById);
+        group.MapPost("", Post).WithName(nameof(Post));
+        group.MapPut("{id:guid}", Put).WithName(nameof(Put));
     }
     private static async Task<Ok<IReadOnlyCollection<RoomDto>>> Get(ISender sender)
         => TypedResults.Ok(await sender.Send(new GetRooms.Query()));
@@ -30,7 +30,16 @@ public class RoomEndpoints : ICarterModule
         var id = await sender.Send(request);
         var roomDto = await sender.Send(new GetRoomById.Query(id));
         var domain = httpContext.Request.GetDisplayUrl();
-        return TypedResults.Created($"{domain}/{id.Value}", roomDto);
+        return TypedResults.Created($"{domain}/{id}", roomDto);
+    }
+    private static async Task<Results<NoContent, BadRequest>> Put(ISender sender, Guid id, UpdateRoom.Command request)
+    {
+        if (!id.Equals(request.Id.Value))
+            return TypedResults.BadRequest();
+        await sender.Send(request)
+            .ConfigureAwait(false);
+
+        return TypedResults.NoContent();
     }
 
 }

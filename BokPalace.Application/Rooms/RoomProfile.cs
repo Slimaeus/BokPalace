@@ -10,9 +10,11 @@ public class RoomProfile : Profile
 {
     public RoomProfile()
     {
-        CreateMap<Room, RoomDto>()
-            .ForMember(x => x.Id, z => z.MapFrom(y => y.Id.Value));
+        CreateMap<Room, RoomDto>();
         CreateMap<CreateRoom.Command, Room>();
+        CreateMap<UpdateRoom.Command, Room>()
+            .ForAllMembers(options => options
+                .Condition((_, _, srcValue, _) => srcValue is { }));
         CreateMap<Item, ItemDto>();
     }
 }

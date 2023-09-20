@@ -24,6 +24,7 @@ public static class GetRoomById
         public async Task<RoomDto> Handle(Query request, CancellationToken cancellationToken)
         {
             var roomDtos = await _applicationDbContext.Rooms
+                .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Id.Equals(request.Id), cancellationToken)
                 ?? throw new Exception();
             return _mapper.Map<RoomDto>(roomDtos);

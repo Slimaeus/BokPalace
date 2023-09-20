@@ -1,3 +1,4 @@
 ﻿namespace BokPalace.Domain.Rooms;
 
-public sealed record RoomId(Guid Value);
+[StronglyTypedId(jsonConverter: StronglyTypedIdJsonConverter.SystemTextJson)]
+public partial struct RoomId { };
