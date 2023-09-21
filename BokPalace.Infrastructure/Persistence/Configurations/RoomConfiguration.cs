@@ -34,6 +34,8 @@ public sealed class RoomConfiguration : IEntityTypeConfiguration<Room>
             .HasColumnType("TEXT")
             .Metadata.SetValueComparer(new CollectionComparer<Item>());
 
-
+        builder.HasOne(x => x.Palace)
+            .WithMany(x => x.Rooms)
+            .HasForeignKey(x => x.PalaceId);
     }
 }

@@ -1,7 +1,8 @@
-﻿using BokPalace.Domain.Rooms;
-using BokPalace.Domain.ValueObjects;
+﻿using BokPalace.Domain.Palaces;
+using BokPalace.Domain.Rooms;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Text.Json;
 
 namespace BokPalace.Infrastructure.Persistence;
 
@@ -37,56 +38,36 @@ public class ApplicationDbContextInitializer
 
     public async Task TrySeedAsync()
     {
-        if (await _applicationDbContext.Rooms.AnyAsync())
-            return;
+        await SeedPalaces();
+        await SeedRooms();
+    }
+    private async Task SeedPalaces()
+    {
+        if (await _applicationDbContext.Palaces.AnyAsync()) return;
 
-        var firstItemList = new Item[]
+        var json = await File.ReadAllTextAsync("../../BokPalace/BokPalace.Infrastructure/Persistence/Seeding/Palaces.json");
+        var palaces = JsonSerializer.Deserialize<List<Palace>>(json, new JsonSerializerOptions
         {
-            new Item
-            {
-                Name = "Ball",
-                Description = "A ball"
-            },
-            new Item
-            {
-                Name = "Bowl",
-                Description = "A bowl"
-            },
-            new Item
-            {
-                Name = "Apple",
-                Description = "An apple"
-            }
-        };
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        })!;
+        await _applicationDbContext.AddRangeAsync(palaces);
+        await _applicationDbContext.SaveChangesAsync();
+    }
+    private async Task SeedRooms()
+    {
+        if (await _applicationDbContext.Rooms.AnyAsync()) return;
 
-        var secondItemList = new Item[]
+        var json = await File.ReadAllTextAsync("../../BokPalace/BokPalace.Infrastructure/Persistence/Seeding/Rooms.json");
+        var rooms = JsonSerializer.Deserialize<List<Room>>(json, new JsonSerializerOptions
         {
-            new Item
-            {
-                Name = "Mirror",
-                Description = "A mirror"
-            }
-        };
-
-        var rooms = new Room[]
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        })!;
+        var palaceIds = _applicationDbContext.Palaces.Select(x => x.Id).ToList();
+        foreach (var room in rooms)
         {
-            new Room
-            {
-                Name = "001",
-                Description = "First room",
-                Items = firstItemList.ToList()
-            },
-            new Room
-            {
-                Name = "002",
-                Description = "Second room",
-                Items = secondItemList.ToList()
-            }
-        };
-
-        _applicationDbContext.Rooms
-            .AddRange(rooms);
-
-        //await _applicationDbContext.SaveChangesAsync();
+            room.PalaceId = palaceIds[new Random().Next(0, palaceIds.Count)];
+        }
+        await _applicationDbContext.AddRangeAsync(rooms);
+        await _applicationDbContext.SaveChangesAsync();
     }
 }

@@ -1,4 +1,5 @@
-﻿using BokPalace.Domain.Rooms;
+﻿using BokPalace.Domain.Palaces;
+using BokPalace.Domain.Rooms;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -10,6 +11,7 @@ public class ApplicationDbContext : DbContext
     {
     }
 
+    public DbSet<Palace> Palaces { get; set; }
     public DbSet<Room> Rooms { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
