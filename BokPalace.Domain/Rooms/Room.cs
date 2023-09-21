@@ -10,7 +10,7 @@ public sealed class Room : BaseEntity<RoomId>
     public Room(RoomId id) : base(id)
     {
     }
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public PalaceId? PalaceId { get; set; }
     public Palace? Palace { get; set; }

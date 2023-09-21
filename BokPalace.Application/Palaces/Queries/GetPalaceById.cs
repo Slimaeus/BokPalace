@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
-using BokPalace.Application.Rooms.Dtos;
+using BokPalace.Application.Palaces.Dtos;
 using BokPalace.Domain.Rooms;
 using BokPalace.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace BokPalace.Application.Rooms.Queries;
+namespace BokPalace.Application.Palaces.Queries;
 
-public static class GetRoomById
+public static class GetPalaceById
 {
-    public sealed record Query(RoomId Id) : IRequest<RoomDto>;
-    sealed class Handler : IRequestHandler<Query, RoomDto>
+    public sealed record Query(PalaceId Id) : IRequest<PalaceDto>;
+    sealed class Handler : IRequestHandler<Query, PalaceDto>
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
@@ -21,13 +21,13 @@ public static class GetRoomById
             _mapper = mapper;
         }
 
-        public async Task<RoomDto> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<PalaceDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            var room = await _applicationDbContext.Rooms
+            var palace = await _applicationDbContext.Palaces
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Id.Equals(request.Id), cancellationToken)
                 ?? throw new Exception();
-            return _mapper.Map<RoomDto>(room);
+            return _mapper.Map<PalaceDto>(palace);
         }
     }
 }
