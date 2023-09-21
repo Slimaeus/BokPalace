@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using System.Diagnostics;
 using System.Net;
@@ -88,10 +89,14 @@ public class ExceptionMiddleware : IMiddleware
     {
         context.Response.StatusCode = (int)statusCode;
         context.Response.ContentType = "application/json";
+        var jsonSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
 
         if (errorResponse != null)
         {
-            var json = JsonConvert.SerializeObject(errorResponse);
+            var json = JsonConvert.SerializeObject(errorResponse, jsonSettings);
             await context.Response.WriteAsync(json);
         }
     }
