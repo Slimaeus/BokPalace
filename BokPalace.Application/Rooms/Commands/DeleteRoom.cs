@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BokPalace.Domain.Rooms;
+﻿using BokPalace.Domain.Rooms;
 using BokPalace.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,13 +11,9 @@ public static class DeleteRoom
     sealed class Handler : IRequestHandler<Command, Unit>
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IMapper _mapper;
 
-        public Handler(ApplicationDbContext applicationDbContext, IMapper mapper)
-        {
-            _applicationDbContext = applicationDbContext;
-            _mapper = mapper;
-        }
+        public Handler(ApplicationDbContext applicationDbContext)
+            => _applicationDbContext = applicationDbContext;
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
             await _applicationDbContext.Rooms

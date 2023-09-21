@@ -1,4 +1,5 @@
-﻿using BokPalace.Infrastructure.Persistence;
+﻿using BokPalace.Infrastructure.Middlewares;
+using BokPalace.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class ConfigureServices
         });
 
         services.AddScoped<ApplicationDbContextInitializer>();
+        services.AddTransient<ExceptionMiddleware>();
 
         return services;
     }

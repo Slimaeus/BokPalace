@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BokPalace.Domain.Rooms;
 using BokPalace.Infrastructure.Persistence;
+using FluentValidation;
 using MediatR;
 
 namespace BokPalace.Application.Rooms.Commands;
@@ -28,6 +29,17 @@ public static class CreateRoom
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
 
             return room.Id;
+        }
+    }
+    public sealed class Validator : AbstractValidator<Command>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Name)
+                .MaximumLength(50);
+
+            RuleFor(x => x.Description)
+                .MaximumLength(50);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BokPalace.Infrastructure.Persistence;
+﻿using BokPalace.Infrastructure.Middlewares;
+using BokPalace.Infrastructure.Persistence;
 using Carter;
 
 namespace BokPalace.Api;
@@ -45,6 +46,9 @@ public static class ConfigureServices
             await initializer.InitialiseAsync();
             await initializer.SeedAsync();
         }
+
+        app.UseMiddleware<ExceptionMiddleware>();
+
         return app;
     }
 }
