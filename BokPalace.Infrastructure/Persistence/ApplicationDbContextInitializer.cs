@@ -1,5 +1,5 @@
-﻿using BokPalace.Domain.Items;
-using BokPalace.Domain.Rooms;
+﻿using BokPalace.Domain.Rooms;
+using BokPalace.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 

@@ -1,5 +1,5 @@
-﻿using BokPalace.Domain.Items;
-using BokPalace.Domain.Primitives;
+﻿using BokPalace.Domain.Primitives;
+using BokPalace.Domain.ValueObjects;
 
 namespace BokPalace.Domain.Rooms;
 

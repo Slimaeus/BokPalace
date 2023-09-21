@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BokPalace.Application.Rooms.Commands;
 using BokPalace.Application.Rooms.Dtos;
-using BokPalace.Domain.Items;
 using BokPalace.Domain.Rooms;
+using BokPalace.Domain.ValueObjects;
 
 namespace BokPalace.Application.Rooms;
 

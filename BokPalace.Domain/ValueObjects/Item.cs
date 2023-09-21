@@ -1,6 +1,6 @@
 ﻿using BokPalace.Domain.Primitives;
 
-namespace BokPalace.Domain.Items;
+namespace BokPalace.Domain.ValueObjects;
 
 public sealed class Item : ValueObject
 {
