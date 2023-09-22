@@ -1,0 +1,43 @@
+﻿@page "/rooms/create"
+@using BokPalace.Web.Data;
+@inject RoomService RoomService;
+@inject ILogger<CreateRoomRequest> Logger
+@inject NavigationManager NavigationManager
+
+<h2>New Room Form</h2>
+
+<EditForm Model="@Model" OnValidSubmit="@SubmitAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>
+            Name:
+            <InputTextArea @bind-Value="Model!.Name" class="form-control" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            Description (optional):
+            <InputTextArea @bind-Value="Model!.Description" class="form-control" />
+        </label>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</EditForm>
+
+@code {
+    private CreateRoomRequest? Model { get; set; }
+
+    protected override void OnInitialized() =>
+        Model ??= new CreateRoomRequest { Name = string.Empty, Description = string.Empty };
+
+    private async Task SubmitAsync()
+    {
+        if (Model is null) return;
+        var roomDto = await RoomService.CreateRoomAsync(Model);
+        Logger.LogInformation("Id = {Id} Name = {Name} Description = {Description}", 
+            roomDto?.Id, roomDto?.Name, roomDto?.Description);
+        NavigationManager.NavigateTo("rooms");
+    }
+}
