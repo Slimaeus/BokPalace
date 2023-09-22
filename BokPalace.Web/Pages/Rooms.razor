@@ -1,9 +1,6 @@
 ﻿@page "/rooms"
-
-@using BokPalace.Application.Rooms.Dtos;
-@using BokPalace.Application.Rooms.Queries;
-@using MediatR;
-@inject ISender sender
+@using BokPalace.Web.Data;
+@inject RoomService RoomService;
 
 <h3>Rooms</h3>
 @if (_rooms is null)
@@ -33,12 +30,10 @@ else
     </table>
 }
 @code {
-    private IEnumerable<RoomDto> _rooms = Array.Empty<RoomDto>();
+    private RoomDto[] _rooms = Array.Empty<RoomDto>();
 
     protected override async Task OnInitializedAsync()
     {
-        var rooms = await sender.Send(new GetRooms.Query());
-
-        _rooms = rooms.AsEnumerable();
+        _rooms = await RoomService.GetRoomsAsync();
     }
 }
