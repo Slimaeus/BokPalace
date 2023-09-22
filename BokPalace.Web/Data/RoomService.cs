@@ -8,14 +8,21 @@ public class RoomService
 
     public RoomService(IHttpClientFactory httpClientFactory)
         => _httpClient = httpClientFactory.CreateClient("BokPalace");
-    public async Task<RoomDto[]> GetRoomsAsync()
+    public async Task<RoomDto[]?> GetRoomsAsync()
     {
         var result = await _httpClient.GetAsync("api/rooms");
         var serializerOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
-        var rooms = await JsonSerializer.DeserializeAsync<RoomDto[]>(await result.Content.ReadAsStreamAsync(), serializerOptions);
-        return rooms ?? Array.Empty<RoomDto>();
+        try
+        {
+            var rooms = await JsonSerializer.DeserializeAsync<RoomDto[]>(await result.Content.ReadAsStreamAsync(), serializerOptions);
+            return rooms;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 }
